@@ -9,7 +9,8 @@ This example shows how to use Connection Pooling with JDBC.
 4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `My6$Password`.
 5. Also make sure you have the `moviedb` database.
 6. You can run this project on Tomcat now.
-7. Navigate to http://localhost:8080/cs122b-spring21-project5-TomcatPooling-example to see a list of stars.
+7. Change the application context to `/cs122b-spring21-project5-TomcatPooling-example` at Intellij IDEA -> Edit Run/Debug Configurations for Tomcat -> Deployment.
+8. Navigate to http://localhost:8080/cs122b-spring21-project5-TomcatPooling-example to see a list of stars.
 
 ### Brief Explanation
 - `TomcatPoolingServlet.java` is a Java servlet that showcases connection pooling. The username and password of the MySQL is given to JDBC through a context.xml file. JDBC uses the credentials to create a connection pool. The servlet leases connections from this pool when needed and returns when the task is done.
