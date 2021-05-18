@@ -6,7 +6,7 @@ This example shows how to use Connection Pooling with JDBC.
 1. Clone this repository using `git clone https://github.com/UCI-Chenli-teaching/cs122b-spring21-project5-TomcatPooling-example.git`
 2. Open IntelliJ -> Import Project -> Choose the project you just cloned (The root path must contain the pom.xml!) -> Choose Import project from external model -> choose Maven -> Click on Finish -> The IntelliJ will load automatically
 3. For "Root Directory", right click "cs122b-spring21-project5-TomcatPooling-example" -> Mark Directory as -> sources root
-4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `mypassword`.
+4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `My6$Password`.
 5. Also make sure you have the `moviedb` database.
 6. You can run this project on Tomcat now.
 7. Navigate to http://localhost:8080/cs122b-spring21-project5-TomcatPooling-example to see a list of stars.
