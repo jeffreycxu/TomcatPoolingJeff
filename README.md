@@ -15,7 +15,7 @@ This example shows how to use Connection Pooling with JDBC.
 ### Brief Explanation
 - `TomcatPoolingServlet.java` is a Java servlet that showcases connection pooling. The username and password of the MySQL is given to JDBC through a context.xml file. JDBC uses the credentials to create a connection pool. The servlet leases connections from this pool when needed and returns when the task is done.
 
-- `META-INF/context.xml` includes important information about the database, user name, password, and pooling configuration. You would have to redeploy after changing this file. Otherwise, the Tomcat server may still use the previous context.xml. Check [this](http://tomcat.apache.org/tomcat-8.5-doc/jndi-datasource-examples-howto.html) for more information about how to configure Connection Pooling.
+- `META-INF/context.xml` includes important information about the database, user name, password, and pooling configuration. You would have to redeploy after changing this file. Otherwise, the Tomcat server may still use the previous context.xml. Check [this](http://tomcat.apache.org/tomcat-9.0-doc/jndi-datasource-examples-howto.html) for more information about how to configure Connection Pooling.
 
 - Look at the following files for the main changes in this war file compared to the previous war file without Connection Pooling:
   - `/META-INF/context.xml`.
