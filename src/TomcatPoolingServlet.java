@@ -1,8 +1,9 @@
 
 /* A servlet to display the contents of the MySQL movieDB database */
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,11 +13,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 @WebServlet(name = "TomcatPoolingServlet", urlPatterns = "/")
 public class TomcatPoolingServlet extends HttpServlet {
+
+    // Create a dataSource which registered in web.xml
+    private DataSource dataSource;
+
+    public void init(ServletConfig config) {
+        try {
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedbexample");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getServletInfo() {
         return "Servlet connects to MySQL database and displays result of a SELECT";
     }
@@ -29,27 +41,25 @@ public class TomcatPoolingServlet extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<HTML><HEAD><TITLE>MovieDB</TITLE></HEAD>");
-        out.println("<BODY><H1>MovieDB (with some changes)</H1>");
+        // the following line is to get a connection from a data source configured as a connection pool
+        try (out; Connection conn = dataSource.getConnection()) {
 
-        try {
-            // the following few lines are for connection pooling
-            // Obtain our environment naming context
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            DataSource ds = (DataSource) envContext.lookup("jdbc/moviedbexample");
 
-            // the following commented lines are direct connections without pooling
-            //Class.forName("org.gjt.mm.mysql.Driver");
-            //Class.forName("com.mysql.jdbc.Driver").newInstance();
-            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            // the following commented lines are direct connections without pooling, which is the old way
+            // Class.forName("org.gjt.mm.mysql.Driver");
+            // Class.forName("com.mysql.jdbc.Driver").newInstance();
+            // try (Connection conn = DriverManager.getConnection(loginUrl, loginUser, loginPasswd)) {
 
-            Connection dbcon = ds.getConnection();
-            if (dbcon == null)
-                out.println("dbcon is null.");
+
+            out.println("<HTML><HEAD><TITLE>MovieDBExample</TITLE></HEAD>");
+            out.println("<BODY><H1>MovieDBExample (with some changes)</H1>");
+
+
+            if (conn == null)
+                out.println("conn is null.");
 
             // Declare our statement
-            Statement statement = dbcon.createStatement();
+            Statement statement = conn.createStatement();
             String query = "SELECT * from stars limit 10";
 
             // Perform the query
@@ -70,20 +80,12 @@ public class TomcatPoolingServlet extends HttpServlet {
 
             rs.close();
             statement.close();
-            dbcon.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            while (ex != null) {
-                System.out.println("SQL Exception:  " + ex.getMessage());
-                ex = ex.getNextException();
-            } // end while
-        } // end catch SQLException
+        } catch (Exception exception) {
+            exception.printStackTrace();
 
-        catch (java.lang.Exception ex) {
-            out.println("<HTML>" + "<HEAD><TITLE>" + "MovieDB: Error" + "</TITLE></HEAD>\n<BODY>"
-                    + "<P>SQL error in doGet: " + ex.getMessage() + "</P></BODY></HTML>");
-            return;
+            // set response status to 500 (Internal Server Error)
+            response.setStatus(500);
         }
-        out.close();
     }
+
 }

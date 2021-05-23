@@ -2,23 +2,74 @@
 
 This example shows how to use Connection Pooling with JDBC.
 
-### To run this example: 
-1. Clone this repository using `git clone https://github.com/UCI-Chenli-teaching/cs122b-spring21-project5-TomcatPooling-example.git`
-2. Open IntelliJ -> Import Project -> Choose the project you just cloned (The root path must contain the pom.xml!) -> Choose Import project from external model -> choose Maven -> Click on Finish -> The IntelliJ will load automatically
-3. For "Root Directory", right click "cs122b-spring21-project5-TomcatPooling-example" -> Mark Directory as -> sources root
+### Before running the example
+
+#### If you do not have USER `mytestuser` setup in MySQL, follow the below steps to create it:
+
+- login to mysql as a root user
+   ```
+   local> mysql -u root -p
+   ```
+
+- create a test user and grant privileges:
+   ```
+   mysql> CREATE USER 'mytestuser'@'localhost' IDENTIFIED BY 'My6$Password';
+   mysql> GRANT ALL PRIVILEGES ON * . * TO 'mytestuser'@'localhost';
+   mysql> quit;
+   ```
+
+#### prepare the database `moviedbexample`
+
+
+```
+local> mysql -u mytestuser -p
+mysql> CREATE DATABASE IF NOT EXISTS moviedbexample;
+mysql> USE moviedbexample;
+mysql> CREATE TABLE IF NOT EXISTS stars(
+               id varchar(10) primary key,
+               name varchar(100) not null,
+               birthYear integer
+           );
+
+mysql> INSERT IGNORE INTO stars VALUES('755011', 'Arnold Schwarzeneggar', 1947);
+mysql> INSERT IGNORE INTO stars VALUES('755017', 'Eddie Murphy', 1961);
+
+mysql> quit;
+```
+
+### To run this example:
+
+1. Clone this repository
+   using `git clone https://github.com/UCI-Chenli-teaching/cs122b-spring21-project5-TomcatPooling-example.git`
+2. Open IntelliJ -> Import Project -> Choose the project you just cloned (The root path must contain the pom.xml!) ->
+   Choose Import project from external model -> choose Maven -> Click on Finish -> The IntelliJ will load automatically
+3. For "Root Directory", right click "cs122b-spring21-project5-TomcatPooling-example" -> Mark Directory as -> sources
+   root
 4. In `WebContent/META-INF/context.xml`, make sure the mysql username is `mytestuser` and password is `My6$Password`.
-5. Also make sure you have the `moviedb` database.
-6. Add Tomcat local server Run/Debug Contiguration.
-7. Change the application context to `/cs122b-spring21-project5-TomcatPooling-example` at Edit Run/Debug Configurations for Tomcat -> Deployment.
+5. Also make sure you have the `moviedbexample` database.
+6. Add Tomcat local server Run/Debug Configuration.
+7. Change the application context to `/cs122b-spring21-project5-TomcatPooling-example` at Edit Run/Debug Configurations
+   for Tomcat -> Deployment.
 8. Navigate to http://localhost:8080/cs122b-spring21-project5-TomcatPooling-example to see a list of stars.
 
 ### Brief Explanation
-- `TomcatPoolingServlet.java` is a Java servlet that showcases connection pooling. The username and password of the MySQL is given to JDBC through a context.xml file. JDBC uses the credentials to create a connection pool. The servlet leases connections from this pool when needed and returns when the task is done.
 
-- `META-INF/context.xml` includes important information about the database, user name, password, and pooling configuration. You would have to redeploy after changing this file. Otherwise, the Tomcat server may still use the previous context.xml. Check [this](http://tomcat.apache.org/tomcat-9.0-doc/jndi-datasource-examples-howto.html) for more information about how to configure Connection Pooling.
+- `TomcatPoolingServlet.java` is a Java servlet that showcases connection pooling. The username and password of the
+  MySQL is given to JDBC through a context.xml file. JDBC uses the credentials to create a connection pool. The servlet
+  leases connections from this pool when needed and returns when the task is done.
 
-- Look at the following files for the main changes in this war file compared to the previous war file without Connection Pooling:
-  - `/META-INF/context.xml`.
-  - `/src/TomcatPoolingServlet.java`
-  - `/WEB-INF/web.xml` (see the `resource-ref` tag)
+- `META-INF/context.xml` includes important information about the database, username, password, and pooling
+  configuration. Note that there are two lines added for the connection pooling configuration.
+  ```              
+  factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+  maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+  ```
+  You would have to redeploy after changing this file. Otherwise, the Tomcat server may still use the
+  previous context.xml. Check [this](http://tomcat.apache.org/tomcat-9.0-doc/jndi-datasource-examples-howto.html) for more information about how to configure Connection Pooling.
+
+- Look at the following files for the main changes in this war file compared to the previous war file without Connection
+  Pooling:
+    - `/META-INF/context.xml`.
+    - `/src/TomcatPoolingServlet.java`
+    - `/WEB-INF/web.xml` (see the `resource-ref` tag)
 
