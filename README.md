@@ -4,16 +4,20 @@ This example shows how to use Connection Pooling with JDBC.
 
 ### Before running the example
 
-#### If you do not have USER `mytestuser` setup in MySQL, follow the below steps to create it:
+#### Create USER `mytestuser` in MySQL(🛑Note this is different from what we did for previous examples):
 
 - login to mysql as a root user
    ```
    local> mysql -u root -p
    ```
+- **if you already have 'mytestuser'@'localhost' in your mysql database, drop it**
+  ```
+  mysql> DROP USER 'mytestuser'@'localhost';
+  ```
 
 - create a test user and grant privileges:
    ```
-   mysql> CREATE USER 'mytestuser'@'localhost' IDENTIFIED BY 'My6$Password';
+   mysql> CREATE USER 'mytestuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'My6$Password';
    mysql> GRANT ALL PRIVILEGES ON * . * TO 'mytestuser'@'localhost';
    mysql> quit;
    ```
