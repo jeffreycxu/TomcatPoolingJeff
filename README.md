@@ -16,6 +16,8 @@ This example shows how to use Connection Pooling with JDBC.
   ```
 
 - create a test user and grant privileges:
+
+MySQL 8.0 enables a more secure authentication by default, but it's less compatible with old drivers. To maintain compatibility, we use the traditional authentication method by adding "WITH mysql_native_password" when we create new test users in P5.
    ```
    mysql> CREATE USER 'mytestuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'My6$Password';
    mysql> GRANT ALL PRIVILEGES ON * . * TO 'mytestuser'@'localhost';
