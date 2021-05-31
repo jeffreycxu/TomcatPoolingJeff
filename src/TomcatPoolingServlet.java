@@ -23,7 +23,7 @@ public class TomcatPoolingServlet extends HttpServlet {
 
     public void init(ServletConfig config) {
         try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedbexample");
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/test");
         } catch (NamingException e) {
             e.printStackTrace();
         }

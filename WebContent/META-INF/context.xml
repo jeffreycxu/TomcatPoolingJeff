@@ -4,7 +4,7 @@
 
     <!-- Defines a Data Source Connecting to localhost moviedbexample -->
     <!-- Note that there are two lines added for connection pooling configuration -->
-    <Resource name="jdbc/moviedbexample"
+    <Resource name="jdbc/test"
               auth="Container"
               driverClassName="com.mysql.jdbc.Driver"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
@@ -12,6 +12,6 @@
               type="javax.sql.DataSource"
               username="mytestuser"
               password="My6$Password"
-              url="jdbc:mysql://localhost:3306/moviedbexample?autoReconnect=true&amp;sslMode=DISABLED"/>
+              url="jdbc:mysql://172.31.18.2:3306/moviedb"/>
 
 </Context>
